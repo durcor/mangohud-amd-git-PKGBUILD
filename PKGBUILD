@@ -1,17 +1,17 @@
-# Maintainer: Darvin Delgado <dnmodder at gmail dot com>
+# Maintainer: Tyler Kaminski <durcor at disroot dot org>
 
-_pkgbase=mangohud
+_pkgbase=mangohud-amd
 pkgbase=$_pkgbase-git
-pkgname=('mangohud-git' 'lib32-mangohud-git' 'mangohud-common-git')
-pkgver=0.3.1.r80.ga6bfa71
+pkgname=('mangohud-amd-git' 'lib32-mangohud-amd-git' 'mangohud-common-git')
+pkgver=0.4.1.r99.g228d1c7
 pkgrel=1
-url='https://github.com/flightlessmango/MangoHud'
+url='https://github.com/durcor/MangoHud'
 license=('MIT')
 arch=('x86_64')
-depends=('glslang' 'libglvnd' 'lib32-libglvnd' 'libxnvctrl' 'lib32-vulkan-icd-loader' 'vulkan-icd-loader')
-makedepends=('gcc' 'meson' 'python-mako' 'libx11' 'lib32-libx11' 'libxnvctrl' 'git' 'vulkan-headers')
+depends=('glslang' 'libglvnd' 'lib32-libglvnd' 'lib32-vulkan-icd-loader' 'vulkan-icd-loader')
+makedepends=('gcc' 'meson' 'python-mako' 'libx11' 'lib32-libx11' 'git' 'vulkan-headers')
 replaces=('vulkan-mesa-layer-mango' 'lib32-vulkan-mesa-layer-mango')
-source=("$_pkgbase::git+$url#branch=develop"
+source=("$_pkgbase::git+$url#branch=master"
         'ImGui::git+https://github.com/flightlessmango/ImGui.git')
 sha512sums=('SKIP'
             'SKIP')
@@ -34,7 +34,10 @@ build() {
     --prefix /usr \
     -Dappend_libdir_mangohud=false \
     -Dinclude_doc=false \
-    -Duse_system_vulkan=enabled
+    -Duse_system_vulkan=enabled \
+    -Dwith_wayland=enabled \
+    -Dwith_nvml=disabled \
+    -Dwith_xnvctrl=disabled
 
     ninja -C build64
 
@@ -48,20 +51,23 @@ build() {
     --prefix /usr \
     -Dappend_libdir_mangohud=false \
     -Dinclude_doc=false \
-    -Duse_system_vulkan=enabled
+    -Duse_system_vulkan=enabled \
+    -Dwith_wayland=enabled \
+    -Dwith_nvml=disabled \
+    -Dwith_xnvctrl=disabled
 
     ninja -C build32
 }
 
-package_mangohud-git() {
-    pkgdesc='A Vulkan overlay layer for monitoring FPS, temperatures, CPU/GPU load and more'
+package_mangohud-amd-git() {
+    pkgdesc='A Vulkan overlay layer for monitoring FPS, temperatures, CPU/GPU load and more (No Nvidia libs + Wayland)'
     conflicts=('mangohud')
-    
+
     DESTDIR="$pkgdir" ninja -C build64 install
 }
 
-package_lib32-mangohud-git() {
-    pkgdesc='A Vulkan overlay layer for monitoring FPS, temperatures, CPU/GPU load and more (32-bit)'
+package_lib32-mangohud-amd-git() {
+    pkgdesc='A Vulkan overlay layer for monitoring FPS, temperatures, CPU/GPU load and more (No Nvidia libs + Wayland) (32-bit)'
     conflicts=('lib32-mangohud')
 
     DESTDIR="$pkgdir" ninja -C build32 install
