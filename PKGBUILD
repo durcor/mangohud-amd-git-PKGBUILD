@@ -71,6 +71,7 @@ package_lib32-mangohud-amd-git() {
     conflicts=('lib32-mangohud')
 
     DESTDIR="$pkgdir" ninja -C build32 install
+    rm -r "$pkgdir/usr/share/man"
 }
 
 package_mangohud-common-git() {
